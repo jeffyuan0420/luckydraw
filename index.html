@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>財神到 ‧ AI 智慧全功能抽獎系統</title>
+    <title>財神到 ‧ 日本風 AI 智慧抽獎系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
@@ -83,7 +83,7 @@
             to { transform: scale(1.2); }
         }
 
-        /* 修復後台按鈕：提升層級並擴大判定面積 */
+        /* 修復後台按鈕層級 */
         .admin-trigger {
             position: fixed;
             bottom: 0;
@@ -142,7 +142,7 @@
 
     <header class="text-center my-6">
         <h1 class="text-4xl md:text-6xl font-black gold-text mb-2">🧧 財神抽大獎 🧧</h1>
-        <p class="text-lg text-yellow-100 opacity-80">AI 智慧加持 ‧ 獎項自訂</p>
+        <p class="text-lg text-yellow-100 opacity-80">日本式慶祝 ‧ AI 智慧靈籤</p>
     </header>
 
     <div id="wheel-container">
@@ -154,20 +154,22 @@
     </div>
 
     <div class="mt-4 w-full max-w-md text-center">
-        <button id="spinBtn" onclick="initiateSpin()" class="btn-spin w-full py-5 px-10 rounded-full text-3xl font-bold text-red-900">
-            點我憑運氣
+        <button id="spinBtn" onclick="initiateSpin()" class="btn-spin w-full py-5 px-10 rounded-full text-3xl font-bold text-red-900 shadow-2xl">
+            點我抽好運
         </button>
         <div id="statusMessage" class="mt-4 text-xl font-semibold text-yellow-400 h-8"></div>
     </div>
 
+    <!-- 中獎彈窗 -->
     <div id="overlay" class="fixed inset-0 flex flex-col items-center justify-center p-6 text-center overflow-y-auto">
         <div class="celebration-icon" id="resultIcon">🎊</div>
-        <h2 class="text-5xl font-black gold-text mt-6 mb-2" id="winTitle">恭喜中獎！</h2>
-        <p id="winPrizeName" class="text-3xl text-white font-bold mb-4"></p>
+        <h2 class="text-6xl font-black gold-text mt-6 mb-2" id="winTitle">恭喜中獎！</h2>
+        <p id="winPrizeName" class="text-4xl text-white font-bold mb-4"></p>
         
-        <div class="bg-red-900/60 border border-yellow-600/40 p-4 rounded-xl max-w-sm mb-6">
+        <!-- AI 財神靈籤區 -->
+        <div class="bg-red-900/60 border border-yellow-600/40 p-4 rounded-xl max-w-sm mb-6 shadow-inner">
             <h4 class="text-yellow-500 font-bold mb-2">✨ 財神爺靈籤批算 ✨</h4>
-            <div id="aiFortune" class="text-lg text-yellow-100 italic leading-relaxed">
+            <div id="aiFortune" class="text-lg text-yellow-100 italic leading-relaxed px-2">
                 正在掐指一算...
                 <div class="flex justify-center gap-1 mt-2">
                     <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
@@ -175,7 +177,7 @@
             </div>
         </div>
 
-        <button onclick="closeOverlay()" class="bg-yellow-500 hover:bg-yellow-400 text-red-900 font-bold py-4 px-10 rounded-full text-xl transition">
+        <button onclick="closeOverlay()" class="bg-yellow-500 hover:bg-yellow-400 text-red-900 font-bold py-4 px-12 rounded-full text-2xl transition-all hover:scale-105 active:scale-95 shadow-xl">
             謝主隆恩
         </button>
     </div>
@@ -193,12 +195,12 @@
         <div class="bg-blue-900/30 p-3 rounded mb-4 border border-blue-500/30">
             <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-2">
-                    <span class="text-blue-300 font-bold">✨ AI 獎項建議</span>
-                    <span id="apiStatus" class="text-[10px] bg-gray-600 px-1 rounded text-white font-mono">Gemini-1.5-Flash</span>
+                    <span class="text-blue-300 font-bold">✨ AI 獎項靈感</span>
+                    <span id="apiStatus" class="text-[10px] bg-gray-600 px-1 rounded text-white font-mono">穩定版 Flash</span>
                 </div>
                 <button onclick="getAiSuggestions()" class="bg-blue-600 hover:bg-blue-500 text-xs py-1 px-3 rounded text-white">生成靈感</button>
             </div>
-            <p id="aiSuggestionOutput" class="text-xs text-gray-400 leading-tight">想換換口味？點擊生成創意獎項。</p>
+            <p id="aiSuggestionOutput" class="text-xs text-gray-400 leading-tight">不知道要設什麼獎？點擊生成看看。</p>
         </div>
 
         <div id="adminList" class="space-y-3"></div>
@@ -209,18 +211,19 @@
         </div>
     </div>
 
-    <!-- 音效資源 - 更新更穩定的 Mixkit 鏈接 -->
+    <!-- 音效資源 - 重新選擇更震撼的素材 -->
+    <!-- 轉動聲：機械齒輪感 -->
     <audio id="spinSfx" src="https://assets.mixkit.co/active_storage/sfx/2005/2005-preview.mp3" preload="auto"></audio>
-    <audio id="winSfx" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
+    <!-- 中獎聲：震撼日本搖鈴與歡呼 (Grand Fanfare) -->
+    <audio id="winSfx" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
+    <!-- 落選聲：滑稽且誇張 (Comical Fail) -->
     <audio id="sadSfx" src="https://assets.mixkit.co/active_storage/sfx/255/255-preview.mp3" preload="auto"></audio>
 
     <script>
-        // --- Gemini API 整合 ---
-        // 修復：改用正式版穩定模型名稱
+        // --- Gemini API ---
         const apiKey = "AIzaSyAK-ZGGxlPvM83SwdDEtaBK_3C7yS-WKvw"; 
         
         async function callGemini(prompt, systemPrompt = "") {
-            // 使用 v1beta 端點配上穩定的 1.5-flash 模型
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
@@ -233,16 +236,11 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-                if (!response.ok) {
-                    const errData = await response.json();
-                    throw new Error(errData.error?.message || 'API Error');
-                }
                 const data = await response.json();
                 return data.candidates?.[0]?.content?.parts?.[0]?.text;
             } catch (e) {
                 console.error("Gemini Error:", e);
-                // 友好化錯誤訊息，避免程式碼直接噴在 UI 上
-                return "【財神爺靈籤】：今日福星高照，財運亨通！只要心存善念，大獎遲早落入你手中。恭喜恭喜！";
+                return "【財神爺靈籤】：今日鴻運當頭，大獎即將降臨！保持平常心，好運自然來。恭喜恭喜！";
             }
         }
 
@@ -281,7 +279,6 @@
                 ctx.fillStyle = prize.color;
                 ctx.fill();
                 ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-                ctx.lineWidth = 1;
                 ctx.stroke();
 
                 ctx.save();
@@ -320,15 +317,16 @@
 
             isSpinning = true;
             spinBtn.disabled = true;
-            statusMsg.innerText = "財神眷顧中...";
+            statusMsg.innerText = "財神爺正在挑選幸運兒...";
             
-            // 修復：旋轉前強制加載音效並播放
+            // 音效重啟與加速預熱
             spinSfx.currentTime = 0;
+            spinSfx.playbackRate = 1.2;
             spinSfx.play().catch(() => {});
-            winSfx.load(); // 預載中獎音效
+            winSfx.load(); 
             sadSfx.load();
 
-            const rounds = 8 + Math.floor(Math.random() * 5);
+            const rounds = 10 + Math.floor(Math.random() * 5); // 增加轉動圈數增加期待感
             const winner = prizes[winIndex];
             const targetDeg = (rounds * 360) + (270 - (winner.startDeg + winner.endDeg) / 2);
 
@@ -350,26 +348,26 @@
             const resultIcon = document.getElementById('resultIcon');
             const winTitle = document.getElementById('winTitle');
 
-            // 修復：中獎音效觸發邏輯
+            // 日本式誇張音效處理
             if (winner.name === "銘謝惠顧") {
                 resultIcon.innerText = "🏮";
-                winTitle.innerText = "再接再厲";
+                winTitle.innerText = "可惜！天機未到";
                 winTitle.className = "text-5xl font-black text-gray-400 mt-6 mb-2";
                 sadSfx.currentTime = 0;
-                sadSfx.play().catch(e => console.log("Fail Sound error:", e));
+                sadSfx.play().catch(() => {});
             } else {
-                resultIcon.innerText = "🎊";
-                winTitle.innerText = "恭喜中獎！";
-                winTitle.className = "text-5xl font-black gold-text mt-6 mb-2";
+                resultIcon.innerText = "🎉";
+                winTitle.innerText = "恭喜中大獎！";
+                winTitle.className = "text-6xl font-black gold-text mt-6 mb-2";
                 winSfx.currentTime = 0;
-                winSfx.play().catch(e => console.log("Win Sound error:", e));
+                winSfx.play().catch(() => {});
             }
 
             overlay.style.display = 'flex';
             drawWheel();
 
             const aiFortune = document.getElementById('aiFortune');
-            aiFortune.innerHTML = '正在掐指一算...<div class="flex justify-center gap-1 mt-2"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
+            aiFortune.innerHTML = '正在為您批算今日財運...<div class="flex justify-center gap-1 mt-2"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
             
             const prompt = `使用者抽中了「${winner.name}」。請扮演一位幽默豪邁的財神爺，批算今日財運。50字以內。`;
             const fortune = await callGemini(prompt, "你是專業的財神爺 AI。");
@@ -386,17 +384,13 @@
 
         function closeOverlay() { document.getElementById('overlay').style.display = 'none'; }
 
-        // 修復：後台計數器邏輯，增加點擊容錯時間至 2s
         let adminClicks = 0;
         let adminTimer;
         function adminCounter() {
             adminClicks++;
             clearTimeout(adminTimer);
-            if (adminClicks >= 5) { 
-                openAdmin(); 
-                adminClicks = 0; 
-            }
-            adminTimer = setTimeout(() => { adminClicks = 0; }, 2000); 
+            if (adminClicks >= 5) { openAdmin(); adminClicks = 0; }
+            adminTimer = setTimeout(() => { adminClicks = 0; }, 1500); 
         }
 
         function openAdmin() {
@@ -408,8 +402,8 @@
                         <input type="text" data-idx="${i}" data-key="name" value="${p.name}" class="w-full text-yellow-500 font-bold bg-[#333] border-[#444] border p-1 rounded">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-xs text-gray-400">庫存數量</label><input type="number" data-idx="${i}" data-key="count" value="${p.count}" class="w-full bg-[#333] border-[#444] border p-1 rounded"></div>
-                        <div><label class="block text-xs text-gray-400">中獎權重</label><input type="number" data-idx="${i}" data-key="weight" value="${p.weight}" class="w-full bg-[#333] border-[#444] border p-1 rounded"></div>
+                        <div><label class="block text-xs text-gray-400">庫存</label><input type="number" data-idx="${i}" data-key="count" value="${p.count}" class="w-full bg-[#333] border-[#444] border p-1 rounded"></div>
+                        <div><label class="block text-xs text-gray-400">權重</label><input type="number" data-idx="${i}" data-key="weight" value="${p.weight}" class="w-full bg-[#333] border-[#444] border p-1 rounded"></div>
                     </div>
                 </div>
             `).join('');
@@ -422,9 +416,8 @@
                 const key = input.dataset.key;
                 prizes[idx][key] = (key === 'name') ? input.value : parseInt(input.value);
             });
-            drawWheel(); 
-            closeAdmin();
-            statusMsg.innerText = "✅ 財神已收到您的更新";
+            drawWheel(); closeAdmin();
+            statusMsg.innerText = "✅ 設定已更新";
             setTimeout(() => statusMsg.innerText = "", 2000);
         }
         function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; }
