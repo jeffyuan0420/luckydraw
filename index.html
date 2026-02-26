@@ -40,6 +40,7 @@
             border: 12px solid var(--gold);
             border-radius: 50%;
             box-shadow: 0 0 60px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,0,0,0.3);
+            /* 調整為更平滑但有力的動力曲線 */
             transition: transform 7s cubic-bezier(0.15, 0, 0.05, 1);
         }
 
@@ -130,7 +131,7 @@
 
     <header class="text-center my-8">
         <h1 class="text-5xl md:text-7xl font-black gold-text mb-2 tracking-tighter">🧧 財神抽大獎 🧧</h1>
-        <p class="text-xl text-yellow-100 opacity-90">劇場級音效 ‧ AI 多元靈籤</p>
+        <p class="text-xl text-yellow-100 opacity-90">劇場級音效 ‧ AI 智慧靈籤</p>
     </header>
 
     <div id="wheel-container">
@@ -182,12 +183,12 @@
         </div>
     </div>
 
-    <!-- 音效資源：更新為更具現場震撼感的素材 -->
-    <!-- 轉動：鼓點式緊張感 -->
-    <audio id="spinSfx" src="https://assets.mixkit.co/active_storage/sfx/133/133-preview.mp3" preload="auto" loop></audio>
-    <!-- 中獎：日本搖鈴 + 隆重歡呼 (Grand Celebration) -->
-    <audio id="winSfx" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
-    <!-- 落選：戲劇化失敗 (Slide Whistle Fail) -->
+    <!-- 音效資源：更新為高戲劇性素材 -->
+    <!-- 轉動：更換為 Drumroll 懸疑鼓點 -->
+    <audio id="spinSfx" src="https://assets.mixkit.co/active_storage/sfx/141/141-preview.mp3" preload="auto" loop></audio>
+    <!-- 中獎：更換為盛大的慶典音樂 (Fanfare) -->
+    <audio id="winSfx" src="https://assets.mixkit.co/active_storage/sfx/2014/2014-preview.mp3" preload="auto"></audio>
+    <!-- 落選：戲劇化失敗音效 -->
     <audio id="sadSfx" src="https://assets.mixkit.co/active_storage/sfx/255/255-preview.mp3" preload="auto"></audio>
 
     <script>
@@ -196,7 +197,7 @@
         async function callGemini(prompt, systemPrompt = "") {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             
-            // 增加隨機擾動因素
+            // 增加隨機擾動因子
             const seed = Math.random().toString(36).substring(7);
             const dynamicPrompt = `${prompt}\n(隨機數驗證: ${seed})`;
 
@@ -293,15 +294,13 @@
 
             isSpinning = true;
             spinBtn.disabled = true;
-            statusMsg.innerText = "財神爺挑選中...";
+            statusMsg.innerText = "開獎鼓點敲響中...";
             
-            // 音效重置與期待感增強
+            // 音效重置與懸疑感增強
             spinSfx.currentTime = 0;
-            spinSfx.playbackRate = 1.0; 
             spinSfx.play().catch(() => {});
             winSfx.load(); sadSfx.load();
 
-            // 修正旋轉邏輯：固定旋轉大圈數，維持強勁動力
             const baseRounds = 25; 
             const winner = prizes[winIndex];
             const centerOfSlice = (winner.startDeg + winner.endDeg) / 2;
@@ -329,30 +328,37 @@
             const overlay = document.getElementById('overlay');
             const resultIcon = document.getElementById('resultIcon');
             const winTitle = document.getElementById('winTitle');
+            const aiFortune = document.getElementById('aiFortune');
 
-            // 日本式誇張反應
+            // 日本式誇張反應與音效校正
             if (winner.name === "銘謝惠顧") {
                 resultIcon.innerText = "🏮";
-                winTitle.innerText = "可惜！天機未到";
+                winTitle.innerText = "時機未到！";
                 winTitle.className = "text-5xl font-black text-gray-500 mt-6 mb-2";
                 sadSfx.currentTime = 0; sadSfx.play();
+                
+                // AI 靈籤指令修正：安慰模式
+                aiFortune.innerHTML = '正在批算轉運良方...<div class="flex justify-center gap-2 mt-4"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
+                var prompt = `使用者抽中了「銘謝惠顧」（沒中獎）。
+                請扮演幽默的財神爺，用安慰、俏皮或禪意的語氣說明目前是「積累福報」的階段。
+                禁止說大吉大利、禁止恭喜中獎。請說「下回必中」或「福報在後頭」。字數50。`;
             } else {
                 resultIcon.innerText = "🎊";
-                winTitle.innerText = "恭喜中大獎！";
+                winTitle.innerText = "天降橫財！";
                 winTitle.className = "text-8xl font-black gold-text mt-6 mb-2 animate-pulse";
                 winSfx.currentTime = 0; winSfx.play();
+                
+                // AI 靈籤指令修正：祝賀模式
+                aiFortune.innerHTML = '正在批算這份大禮...<div class="flex justify-center gap-2 mt-4"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
+                var prompt = `使用者抽中了「${winner.name}」。
+                請扮演豪邁的財神爺，極盡誇張地恭喜他財運爆棚、勢不可擋！
+                每次請變換風格（打油詩、熱情祝福）。字數50。`;
             }
 
             overlay.style.display = 'flex';
             drawWheel();
 
-            const aiFortune = document.getElementById('aiFortune');
-            aiFortune.innerHTML = '正在批算運勢...<div class="flex justify-center gap-2 mt-4"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
-            
-            const prompt = `使用者抽中了「${winner.name}」。請扮演一位極度豪邁的財神爺，批算財運。
-            指令：每次請隨機選擇一種風格（如：打油詩、笑話、禪意批註、熱情祝福）。
-            字數限制：約50字。禁止輸出重覆內容。`;
-            const fortune = await callGemini(prompt, "你是專業的財神爺 AI。你說話幽默且富有變化，絕不重複。");
+            const fortune = await callGemini(prompt, "你是專業的財神爺 AI。你說話幽默且富有變化，能精準分辨中獎與否的情境。");
             aiFortune.innerText = fortune;
         }
 
@@ -391,7 +397,7 @@
                 prizes[idx][key] = (key === 'name') ? input.value : parseInt(input.value);
             });
             drawWheel(); closeAdmin();
-            statusMsg.innerText = "✅ 設定已更新";
+            statusMsg.innerText = "✅ 財神已收到設定";
             setTimeout(() => statusMsg.innerText = "", 2000);
         }
         function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; }
