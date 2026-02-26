@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>財神到 ‧ 日本開獎風 AI 智慧抽獎系統</title>
+    <title>財神到 ‧ 日本商店街風 AI 智慧抽獎系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
@@ -40,7 +40,8 @@
             border: 12px solid var(--gold);
             border-radius: 50%;
             box-shadow: 0 0 60px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,0,0,0.3);
-            transition: transform 7s cubic-bezier(0.1, 0, 0.1, 1);
+            /* 調整為更平滑但有力的動力曲線 */
+            transition: transform 7s cubic-bezier(0.2, 0, 0, 1);
         }
 
         .pointer {
@@ -73,7 +74,6 @@
             z-index: 5000;
         }
 
-        /* 超高級後台觸發區 */
         .admin-trigger {
             position: fixed;
             bottom: 0;
@@ -100,7 +100,6 @@
             max-height: 85vh;
             overflow-y: auto;
             border: 3px solid var(--gold);
-            box-shadow: 0 0 100px rgba(0,0,0,0.8);
         }
 
         .typing-dot {
@@ -132,11 +131,10 @@
 
     <header class="text-center my-8">
         <h1 class="text-5xl md:text-7xl font-black gold-text mb-2 tracking-tighter">🧧 財神抽大獎 🧧</h1>
-        <p class="text-xl text-yellow-100 opacity-90">日本商店街風 ‧ AI 靈籤開運</p>
+        <p class="text-xl text-yellow-100 opacity-90">極致動力感 ‧ 日本開獎效果</p>
     </header>
 
     <div id="wheel-container">
-        <!-- 指針 -->
         <svg class="pointer" viewBox="0 0 100 120">
             <path d="M50 120 L0 20 A50 50 0 1 1 100 20 Z" fill="#FFD700" stroke="#B8860B" stroke-width="3"/>
             <circle cx="50" cy="40" r="12" fill="#D32F2F" />
@@ -151,13 +149,11 @@
         <div id="statusMessage" class="mt-6 text-2xl font-bold text-yellow-400 h-8"></div>
     </div>
 
-    <!-- 結果彈窗 -->
     <div id="overlay" class="fixed inset-0 flex flex-col items-center justify-center p-6 text-center overflow-y-auto">
         <div class="text-[120px] mb-4" id="resultIcon">🎊</div>
         <h2 class="text-7xl font-black gold-text mb-4" id="winTitle">恭喜中獎！</h2>
         <p id="winPrizeName" class="text-5xl text-white font-bold mb-8"></p>
         
-        <!-- AI 財神區 -->
         <div class="bg-red-950/80 border-2 border-yellow-600/50 p-6 rounded-2xl max-w-md mb-10 shadow-2xl">
             <h4 class="text-yellow-500 font-black text-xl mb-4 tracking-widest">✨ 財神爺開金口 ✨</h4>
             <div id="aiFortune" class="text-2xl text-yellow-500 italic leading-snug font-medium min-h-[80px]">
@@ -173,31 +169,28 @@
         </button>
     </div>
 
-    <!-- 絕對優先的後台觸發區 -->
     <div class="admin-trigger" onclick="adminCounter()"></div>
 
-    <!-- 後台面板 -->
     <div id="adminModal" class="modal">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-3xl font-bold gold-text">獎項與比例設定</h3>
             <button onclick="closeAdmin()" class="text-gray-400 text-4xl">&times;</button>
         </div>
-        
         <div id="adminList" class="space-y-4"></div>
-        
         <div class="mt-10 flex gap-4">
             <button onclick="saveAdminData()" class="flex-1 bg-green-600 hover:bg-green-500 py-4 rounded-xl font-black text-xl text-white shadow-xl">儲存並重啟</button>
             <button onclick="closeAdmin()" class="flex-1 bg-gray-700 py-4 rounded-xl font-bold text-xl text-white">取消</button>
         </div>
     </div>
 
-    <!-- 音效資源 - 鎖定戲劇化素材 -->
+    <!-- 音效資源：更新為高戲劇度素材 -->
     <audio id="spinSfx" src="https://assets.mixkit.co/active_storage/sfx/2005/2005-preview.mp3" preload="auto" loop></audio>
+    <!-- 中獎：換成更有節慶感的 Fanfare -->
     <audio id="winSfx" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
+    <!-- 落選：換成更滑稽的聲音 -->
     <audio id="sadSfx" src="https://assets.mixkit.co/active_storage/sfx/255/255-preview.mp3" preload="auto"></audio>
 
     <script>
-        // --- 模型鎖定為穩定版 1.5-flash ---
         const apiKey = "AIzaSyAK-ZGGxlPvM83SwdDEtaBK_3C7yS-WKvw"; 
         
         async function callGemini(prompt, systemPrompt = "") {
@@ -206,7 +199,6 @@
                 contents: [{ parts: [{ text: prompt }] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] }
             };
-
             try {
                 const response = await fetch(url, {
                     method: 'POST',
@@ -214,13 +206,10 @@
                     body: JSON.stringify(payload)
                 });
                 const data = await response.json();
-                // 嚴謹解析，防止 undefined
                 const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (!text || text.trim() === "") throw new Error("API Invalid Data");
-                return text;
+                return text || "【財神悄悄話】：今日大吉大利！";
             } catch (e) {
-                console.error("Gemini API Error:", e);
-                return "【財神爺靈籤】：今日鴻運齊天，大吉大利！莫問前程，只需盡情歡笑，好運必將如泉湧現！";
+                return "【財神爺靈籤】：鴻運齊天，好運必將降臨！";
             }
         }
 
@@ -240,6 +229,8 @@
         const winSfx = document.getElementById('winSfx');
         const spinSfx = document.getElementById('spinSfx');
         const sadSfx = document.getElementById('sadSfx');
+        
+        let currentRotation = 0; // 全域追蹤旋轉角度
         let isSpinning = false;
 
         function drawWheel() {
@@ -259,7 +250,6 @@
                 ctx.fillStyle = prize.color;
                 ctx.fill();
                 ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-                ctx.lineWidth = 1;
                 ctx.stroke();
 
                 ctx.save();
@@ -279,7 +269,6 @@
 
             ctx.beginPath(); ctx.arc(centerX, centerY, 60, 0, Math.PI * 2);
             ctx.fillStyle = '#FFD700'; ctx.fill();
-            ctx.strokeStyle = '#B8860B'; ctx.lineWidth = 5; ctx.stroke();
             ctx.fillStyle = '#8B0000'; ctx.font = "bold 40px serif"; ctx.textAlign = "center";
             ctx.fillText("福", centerX, centerY + 14);
         }
@@ -299,20 +288,28 @@
 
             isSpinning = true;
             spinBtn.disabled = true;
-            statusMsg.innerText = "財神眷顧中...";
+            statusMsg.innerText = "財神爺挑選中...";
             
-            // 音效與期待感：提高播放速度
+            // 強制重置音效並加速播放
             spinSfx.currentTime = 0;
-            spinSfx.playbackRate = 1.4; 
+            spinSfx.playbackRate = 1.6; // 提高轉速音效頻率
             spinSfx.play().catch(() => {});
-            winSfx.load(); 
-            sadSfx.load();
+            winSfx.load(); sadSfx.load();
 
-            const rounds = 15 + Math.floor(Math.random() * 5); // 增加到 15-20 圈
+            // 修正旋轉邏輯：每次旋轉基礎增加 20 圈，解決轉速下降問題
+            const baseRounds = 20; 
             const winner = prizes[winIndex];
-            const targetDeg = (rounds * 360) + (270 - (winner.startDeg + winner.endDeg) / 2);
+            const centerOfSlice = (winner.startDeg + winner.endDeg) / 2;
+            
+            // 計算當前角度下，要轉到目標獎項需要的額外度數
+            // 我們要把指針 (270度) 對準獎項中心
+            const currentMod = currentRotation % 360;
+            const extraDeg = (270 - centerOfSlice - currentMod + 1440) % 360;
+            
+            const totalSpinDeg = (baseRounds * 360) + extraDeg;
+            currentRotation += totalSpinDeg;
 
-            canvas.style.transform = `rotate(${targetDeg}deg)`;
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
             setTimeout(() => finalizeSpin(winIndex), 7000);
         }
 
@@ -330,19 +327,16 @@
             const resultIcon = document.getElementById('resultIcon');
             const winTitle = document.getElementById('winTitle');
 
-            // 日本商店街式的誇張反應
             if (winner.name === "銘謝惠顧") {
                 resultIcon.innerText = "🏮";
                 winTitle.innerText = "可惜！天機未到";
                 winTitle.className = "text-5xl font-black text-gray-500 mt-6 mb-2";
-                sadSfx.currentTime = 0;
-                sadSfx.play().catch(() => {});
+                sadSfx.currentTime = 0; sadSfx.play();
             } else {
                 resultIcon.innerText = "🎊";
                 winTitle.innerText = "恭喜中大獎！";
                 winTitle.className = "text-7xl font-black gold-text mt-6 mb-2 animate-pulse";
-                winSfx.currentTime = 0;
-                winSfx.play().catch(() => {});
+                winSfx.currentTime = 0; winSfx.play();
             }
 
             overlay.style.display = 'flex';
@@ -358,7 +352,6 @@
 
         function closeOverlay() { document.getElementById('overlay').style.display = 'none'; }
 
-        // --- 核心後台觸發 ---
         let adminClicks = 0;
         let adminTimer;
         function adminCounter() {
@@ -378,7 +371,7 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div><label class="block text-sm text-gray-400">庫存</label><input type="number" data-idx="${i}" data-key="count" value="${p.count}" class="w-full font-bold"></div>
-                        <div><label class="block text-sm text-gray-400">佔比</label><input type="number" data-idx="${i}" data-key="weight" value="${p.weight}" class="w-full font-bold"></div>
+                        <div><label class="block text-sm text-gray-400">權重</label><input type="number" data-idx="${i}" data-key="weight" value="${p.weight}" class="w-full font-bold"></div>
                     </div>
                 </div>
             `).join('');
@@ -392,7 +385,7 @@
                 prizes[idx][key] = (key === 'name') ? input.value : parseInt(input.value);
             });
             drawWheel(); closeAdmin();
-            statusMsg.innerText = "✅ 財神已收到變更";
+            statusMsg.innerText = "✅ 設定已更新";
             setTimeout(() => statusMsg.innerText = "", 2000);
         }
         function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; }
