@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>財神到 ‧ 日本風 AI 智慧抽獎系統</title>
+    <title>財神到 ‧ 日本開獎風 AI 智慧抽獎系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
@@ -23,7 +23,7 @@
 
         .gold-text {
             color: var(--gold);
-            text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         #wheel-container {
@@ -39,60 +39,49 @@
             height: 100%;
             border: 12px solid var(--gold);
             border-radius: 50%;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.3);
-            transition: transform 6s cubic-bezier(0.15, 0, 0.15, 1);
+            box-shadow: 0 0 60px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,0,0,0.3);
+            transition: transform 7s cubic-bezier(0.1, 0, 0.1, 1);
         }
 
         .pointer {
             position: absolute;
-            top: -25px;
+            top: -30px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
-            height: 80px;
-            z-index: 20;
-            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+            width: 70px;
+            height: 90px;
+            z-index: 30;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
         }
 
         .btn-spin {
             background: linear-gradient(180deg, #FFEB3B 0%, #FBC02D 100%);
             border: none;
-            box-shadow: 0 8px 0 #C49000, 0 15px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 0 #C49000, 0 15px 30px rgba(0,0,0,0.4);
             transition: all 0.1s;
         }
 
         .btn-spin:active {
             transform: translateY(4px);
-            box-shadow: 0 4px 0 #C49000, 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 0 #C49000;
         }
 
         #overlay {
             display: none;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
+            background: rgba(0, 0, 0, 0.96);
+            backdrop-filter: blur(8px);
+            z-index: 5000;
         }
 
-        .celebration-icon {
-            font-size: 100px;
-            animation: bounce 0.6s infinite alternate;
-        }
-
-        @keyframes bounce {
-            from { transform: scale(0.8); }
-            to { transform: scale(1.2); }
-        }
-
-        /* 修復後台按鈕層級 */
+        /* 超高級後台觸發區 */
         .admin-trigger {
             position: fixed;
             bottom: 0;
             right: 0;
-            width: 120px;
-            height: 120px;
+            width: 150px;
+            height: 150px;
             background: transparent;
-            opacity: 0;
-            z-index: 9999; 
+            z-index: 999999; 
             cursor: pointer;
         }
 
@@ -102,125 +91,113 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #222;
-            padding: 1.5rem;
-            border-radius: 1rem;
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 1.5rem;
             width: 95%;
             max-width: 550px;
-            z-index: 2000;
+            z-index: 6000;
             max-height: 85vh;
             overflow-y: auto;
-            border: 2px solid var(--gold);
+            border: 3px solid var(--gold);
+            box-shadow: 0 0 100px rgba(0,0,0,0.8);
         }
 
         .typing-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             background: var(--gold);
             border-radius: 50%;
             display: inline-block;
-            animation: typing 1s infinite ease-in-out;
+            animation: typing 0.8s infinite ease-in-out;
         }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.1s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.2s; }
 
         @keyframes typing {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            0%, 100% { transform: translateY(0); opacity: 0.3; }
+            50% { transform: translateY(-12px); opacity: 1; }
         }
 
         input {
             color: #fff;
-            background: #333;
+            background: #2a2a2a;
             border: 1px solid #444;
-            padding: 8px;
-            border-radius: 4px;
+            padding: 10px;
+            border-radius: 6px;
         }
     </style>
 </head>
-<body class="flex flex-col items-center min-h-screen p-4">
+<body class="flex flex-col items-center min-h-screen p-4 select-none">
 
-    <header class="text-center my-6">
-        <h1 class="text-4xl md:text-6xl font-black gold-text mb-2">🧧 財神抽大獎 🧧</h1>
-        <p class="text-lg text-yellow-100 opacity-80">日本式慶祝 ‧ AI 智慧靈籤</p>
+    <header class="text-center my-8">
+        <h1 class="text-5xl md:text-7xl font-black gold-text mb-2 tracking-tighter">🧧 財神抽大獎 🧧</h1>
+        <p class="text-xl text-yellow-100 opacity-90">日本商店街風 ‧ AI 靈籤開運</p>
     </header>
 
     <div id="wheel-container">
+        <!-- 指針 -->
         <svg class="pointer" viewBox="0 0 100 120">
-            <path d="M50 120 L0 20 A50 50 0 1 1 100 20 Z" fill="#FFD700" stroke="#B8860B" stroke-width="2"/>
-            <circle cx="50" cy="40" r="10" fill="#D32F2F" />
+            <path d="M50 120 L0 20 A50 50 0 1 1 100 20 Z" fill="#FFD700" stroke="#B8860B" stroke-width="3"/>
+            <circle cx="50" cy="40" r="12" fill="#D32F2F" />
         </svg>
         <canvas id="wheelCanvas" width="800" height="800"></canvas>
     </div>
 
-    <div class="mt-4 w-full max-w-md text-center">
-        <button id="spinBtn" onclick="initiateSpin()" class="btn-spin w-full py-5 px-10 rounded-full text-3xl font-bold text-red-900 shadow-2xl">
+    <div class="mt-8 w-full max-w-md text-center">
+        <button id="spinBtn" onclick="initiateSpin()" class="btn-spin w-full py-6 px-12 rounded-full text-4xl font-black text-red-900 shadow-2xl">
             點我抽好運
         </button>
-        <div id="statusMessage" class="mt-4 text-xl font-semibold text-yellow-400 h-8"></div>
+        <div id="statusMessage" class="mt-6 text-2xl font-bold text-yellow-400 h-8"></div>
     </div>
 
-    <!-- 中獎彈窗 -->
+    <!-- 結果彈窗 -->
     <div id="overlay" class="fixed inset-0 flex flex-col items-center justify-center p-6 text-center overflow-y-auto">
-        <div class="celebration-icon" id="resultIcon">🎊</div>
-        <h2 class="text-6xl font-black gold-text mt-6 mb-2" id="winTitle">恭喜中獎！</h2>
-        <p id="winPrizeName" class="text-4xl text-white font-bold mb-4"></p>
+        <div class="text-[120px] mb-4" id="resultIcon">🎊</div>
+        <h2 class="text-7xl font-black gold-text mb-4" id="winTitle">恭喜中獎！</h2>
+        <p id="winPrizeName" class="text-5xl text-white font-bold mb-8"></p>
         
-        <!-- AI 財神靈籤區 -->
-        <div class="bg-red-900/60 border border-yellow-600/40 p-4 rounded-xl max-w-sm mb-6 shadow-inner">
-            <h4 class="text-yellow-500 font-bold mb-2">✨ 財神爺靈籤批算 ✨</h4>
-            <div id="aiFortune" class="text-lg text-yellow-100 italic leading-relaxed px-2">
-                正在掐指一算...
-                <div class="flex justify-center gap-1 mt-2">
+        <!-- AI 財神區 -->
+        <div class="bg-red-950/80 border-2 border-yellow-600/50 p-6 rounded-2xl max-w-md mb-10 shadow-2xl">
+            <h4 class="text-yellow-500 font-black text-xl mb-4 tracking-widest">✨ 財神爺開金口 ✨</h4>
+            <div id="aiFortune" class="text-2xl text-yellow-500 italic leading-snug font-medium min-h-[80px]">
+                正在為您批算...
+                <div class="flex justify-center gap-2 mt-4">
                     <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
                 </div>
             </div>
         </div>
 
-        <button onclick="closeOverlay()" class="bg-yellow-500 hover:bg-yellow-400 text-red-900 font-bold py-4 px-12 rounded-full text-2xl transition-all hover:scale-105 active:scale-95 shadow-xl">
+        <button onclick="closeOverlay()" class="bg-yellow-500 hover:bg-yellow-400 text-red-900 font-black py-5 px-16 rounded-full text-3xl shadow-2xl transition-all hover:scale-110 active:scale-90">
             謝主隆恩
         </button>
     </div>
 
-    <!-- 隱藏後台觸發點 -->
+    <!-- 絕對優先的後台觸發區 -->
     <div class="admin-trigger" onclick="adminCounter()"></div>
 
-    <!-- 管理後台 -->
-    <div id="adminModal" class="modal shadow-2xl">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-2xl font-bold gold-text">獎項與比例管理</h3>
-            <button onclick="closeAdmin()" class="text-gray-400 text-3xl">&times;</button>
+    <!-- 後台面板 -->
+    <div id="adminModal" class="modal">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-3xl font-bold gold-text">獎項與比例設定</h3>
+            <button onclick="closeAdmin()" class="text-gray-400 text-4xl">&times;</button>
         </div>
         
-        <div class="bg-blue-900/30 p-3 rounded mb-4 border border-blue-500/30">
-            <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                    <span class="text-blue-300 font-bold">✨ AI 獎項靈感</span>
-                    <span id="apiStatus" class="text-[10px] bg-gray-600 px-1 rounded text-white font-mono">穩定版 Flash</span>
-                </div>
-                <button onclick="getAiSuggestions()" class="bg-blue-600 hover:bg-blue-500 text-xs py-1 px-3 rounded text-white">生成靈感</button>
-            </div>
-            <p id="aiSuggestionOutput" class="text-xs text-gray-400 leading-tight">不知道要設什麼獎？點擊生成看看。</p>
-        </div>
-
-        <div id="adminList" class="space-y-3"></div>
+        <div id="adminList" class="space-y-4"></div>
         
-        <div class="mt-6 flex gap-2">
-            <button onclick="saveAdminData()" class="flex-1 bg-green-600 py-3 rounded font-bold text-white shadow-lg">儲存設定</button>
-            <button onclick="closeAdmin()" class="flex-1 bg-gray-700 py-3 rounded font-bold text-white">取消</button>
+        <div class="mt-10 flex gap-4">
+            <button onclick="saveAdminData()" class="flex-1 bg-green-600 hover:bg-green-500 py-4 rounded-xl font-black text-xl text-white shadow-xl">儲存並重啟</button>
+            <button onclick="closeAdmin()" class="flex-1 bg-gray-700 py-4 rounded-xl font-bold text-xl text-white">取消</button>
         </div>
     </div>
 
-    <!-- 音效資源 - 重新選擇更震撼的素材 -->
-    <!-- 轉動聲：機械齒輪感 -->
-    <audio id="spinSfx" src="https://assets.mixkit.co/active_storage/sfx/2005/2005-preview.mp3" preload="auto"></audio>
-    <!-- 中獎聲：震撼日本搖鈴與歡呼 (Grand Fanfare) -->
+    <!-- 音效資源 - 鎖定戲劇化素材 -->
+    <audio id="spinSfx" src="https://assets.mixkit.co/active_storage/sfx/2005/2005-preview.mp3" preload="auto" loop></audio>
     <audio id="winSfx" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
-    <!-- 落選聲：滑稽且誇張 (Comical Fail) -->
     <audio id="sadSfx" src="https://assets.mixkit.co/active_storage/sfx/255/255-preview.mp3" preload="auto"></audio>
 
     <script>
-        // --- Gemini API ---
+        // --- 模型鎖定為穩定版 1.5-flash ---
         const apiKey = "AIzaSyAK-ZGGxlPvM83SwdDEtaBK_3C7yS-WKvw"; 
         
         async function callGemini(prompt, systemPrompt = "") {
@@ -237,10 +214,13 @@
                     body: JSON.stringify(payload)
                 });
                 const data = await response.json();
-                return data.candidates?.[0]?.content?.parts?.[0]?.text;
+                // 嚴謹解析，防止 undefined
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!text || text.trim() === "") throw new Error("API Invalid Data");
+                return text;
             } catch (e) {
-                console.error("Gemini Error:", e);
-                return "【財神爺靈籤】：今日鴻運當頭，大獎即將降臨！保持平常心，好運自然來。恭喜恭喜！";
+                console.error("Gemini API Error:", e);
+                return "【財神爺靈籤】：今日鴻運齊天，大吉大利！莫問前程，只需盡情歡笑，好運必將如泉湧現！";
             }
         }
 
@@ -271,14 +251,15 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             let startAngle = 0;
 
-            prizes.forEach((prize, i) => {
+            prizes.forEach((prize) => {
                 const sliceAngle = (2 * Math.PI * prize.weight) / totalWeight;
                 ctx.beginPath();
                 ctx.moveTo(centerX, centerY);
                 ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
                 ctx.fillStyle = prize.color;
                 ctx.fill();
-                ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+                ctx.lineWidth = 1;
                 ctx.stroke();
 
                 ctx.save();
@@ -286,7 +267,7 @@
                 ctx.rotate(startAngle + sliceAngle / 2);
                 ctx.textAlign = "right";
                 ctx.fillStyle = "#fff";
-                let fontSize = Math.min(26, Math.max(12, (sliceAngle * 140)));
+                let fontSize = Math.min(28, Math.max(12, (sliceAngle * 150)));
                 ctx.font = `bold ${fontSize}px sans-serif`;
                 ctx.fillText(prize.name + (prize.count < 100 ? ` (${prize.count})` : ""), radius - 40, 10);
                 ctx.restore();
@@ -296,10 +277,11 @@
                 startAngle += sliceAngle;
             });
 
-            ctx.beginPath(); ctx.arc(centerX, centerY, 55, 0, Math.PI * 2);
+            ctx.beginPath(); ctx.arc(centerX, centerY, 60, 0, Math.PI * 2);
             ctx.fillStyle = '#FFD700'; ctx.fill();
-            ctx.fillStyle = '#8B0000'; ctx.font = "bold 35px serif"; ctx.textAlign = "center";
-            ctx.fillText("福", centerX, centerY + 12);
+            ctx.strokeStyle = '#B8860B'; ctx.lineWidth = 5; ctx.stroke();
+            ctx.fillStyle = '#8B0000'; ctx.font = "bold 40px serif"; ctx.textAlign = "center";
+            ctx.fillText("福", centerX, centerY + 14);
         }
 
         function initiateSpin() {
@@ -317,21 +299,21 @@
 
             isSpinning = true;
             spinBtn.disabled = true;
-            statusMsg.innerText = "財神爺正在挑選幸運兒...";
+            statusMsg.innerText = "財神眷顧中...";
             
-            // 音效重啟與加速預熱
+            // 音效與期待感：提高播放速度
             spinSfx.currentTime = 0;
-            spinSfx.playbackRate = 1.2;
+            spinSfx.playbackRate = 1.4; 
             spinSfx.play().catch(() => {});
             winSfx.load(); 
             sadSfx.load();
 
-            const rounds = 10 + Math.floor(Math.random() * 5); // 增加轉動圈數增加期待感
+            const rounds = 15 + Math.floor(Math.random() * 5); // 增加到 15-20 圈
             const winner = prizes[winIndex];
             const targetDeg = (rounds * 360) + (270 - (winner.startDeg + winner.endDeg) / 2);
 
             canvas.style.transform = `rotate(${targetDeg}deg)`;
-            setTimeout(() => finalizeSpin(winIndex), 6000);
+            setTimeout(() => finalizeSpin(winIndex), 7000);
         }
 
         async function finalizeSpin(index) {
@@ -348,17 +330,17 @@
             const resultIcon = document.getElementById('resultIcon');
             const winTitle = document.getElementById('winTitle');
 
-            // 日本式誇張音效處理
+            // 日本商店街式的誇張反應
             if (winner.name === "銘謝惠顧") {
                 resultIcon.innerText = "🏮";
                 winTitle.innerText = "可惜！天機未到";
-                winTitle.className = "text-5xl font-black text-gray-400 mt-6 mb-2";
+                winTitle.className = "text-5xl font-black text-gray-500 mt-6 mb-2";
                 sadSfx.currentTime = 0;
                 sadSfx.play().catch(() => {});
             } else {
-                resultIcon.innerText = "🎉";
+                resultIcon.innerText = "🎊";
                 winTitle.innerText = "恭喜中大獎！";
-                winTitle.className = "text-6xl font-black gold-text mt-6 mb-2";
+                winTitle.className = "text-7xl font-black gold-text mt-6 mb-2 animate-pulse";
                 winSfx.currentTime = 0;
                 winSfx.play().catch(() => {});
             }
@@ -367,23 +349,16 @@
             drawWheel();
 
             const aiFortune = document.getElementById('aiFortune');
-            aiFortune.innerHTML = '正在為您批算今日財運...<div class="flex justify-center gap-1 mt-2"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
+            aiFortune.innerHTML = '正在開金口...<div class="flex justify-center gap-2 mt-4"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
             
-            const prompt = `使用者抽中了「${winner.name}」。請扮演一位幽默豪邁的財神爺，批算今日財運。50字以內。`;
+            const prompt = `使用者抽中了「${winner.name}」。請扮演一位極度豪邁的財神爺，給他一段熱情的財運預測。字數50字。`;
             const fortune = await callGemini(prompt, "你是專業的財神爺 AI。");
             aiFortune.innerText = fortune;
         }
 
-        async function getAiSuggestions() {
-            const output = document.getElementById('aiSuggestionOutput');
-            output.innerText = "正在構思創意獎項...";
-            const prompt = "請給我 5 個尾牙創意獎項名稱。";
-            const result = await callGemini(prompt, "你是一位專業的活動企劃專家。");
-            output.innerText = result;
-        }
-
         function closeOverlay() { document.getElementById('overlay').style.display = 'none'; }
 
+        // --- 核心後台觸發 ---
         let adminClicks = 0;
         let adminTimer;
         function adminCounter() {
@@ -396,14 +371,14 @@
         function openAdmin() {
             const listContainer = document.getElementById('adminList');
             listContainer.innerHTML = prizes.map((p, i) => `
-                <div class="bg-gray-800 p-3 rounded border-l-4" style="border-color: ${p.color}">
-                    <div class="mb-2">
-                        <label class="block text-xs text-gray-400">獎項名稱</label>
-                        <input type="text" data-idx="${i}" data-key="name" value="${p.name}" class="w-full text-yellow-500 font-bold bg-[#333] border-[#444] border p-1 rounded">
+                <div class="bg-gray-800 p-4 rounded-xl border-l-8" style="border-color: ${p.color}">
+                    <div class="mb-3">
+                        <label class="block text-sm text-gray-400">獎項名稱</label>
+                        <input type="text" data-idx="${i}" data-key="name" value="${p.name}" class="w-full text-yellow-400 font-black text-lg">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-xs text-gray-400">庫存</label><input type="number" data-idx="${i}" data-key="count" value="${p.count}" class="w-full bg-[#333] border-[#444] border p-1 rounded"></div>
-                        <div><label class="block text-xs text-gray-400">權重</label><input type="number" data-idx="${i}" data-key="weight" value="${p.weight}" class="w-full bg-[#333] border-[#444] border p-1 rounded"></div>
+                        <div><label class="block text-sm text-gray-400">庫存</label><input type="number" data-idx="${i}" data-key="count" value="${p.count}" class="w-full font-bold"></div>
+                        <div><label class="block text-sm text-gray-400">佔比</label><input type="number" data-idx="${i}" data-key="weight" value="${p.weight}" class="w-full font-bold"></div>
                     </div>
                 </div>
             `).join('');
@@ -417,7 +392,7 @@
                 prizes[idx][key] = (key === 'name') ? input.value : parseInt(input.value);
             });
             drawWheel(); closeAdmin();
-            statusMsg.innerText = "✅ 設定已更新";
+            statusMsg.innerText = "✅ 財神已收到變更";
             setTimeout(() => statusMsg.innerText = "", 2000);
         }
         function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; }
