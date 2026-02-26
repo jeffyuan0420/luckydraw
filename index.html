@@ -126,17 +126,12 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* 輸入框樣式優化 */
         input {
             color: #fff;
             background: #333;
             border: 1px solid #444;
             padding: 8px;
             border-radius: 4px;
-        }
-        input:focus {
-            border-color: var(--gold);
-            outline: none;
         }
     </style>
 </head>
@@ -162,13 +157,11 @@
         <div id="statusMessage" class="mt-4 text-xl font-semibold text-yellow-400 h-8"></div>
     </div>
 
-    <!-- 中獎彈窗 -->
     <div id="overlay" class="fixed inset-0 flex flex-col items-center justify-center p-6 text-center overflow-y-auto">
         <div class="celebration-icon" id="resultIcon">🎊</div>
         <h2 class="text-5xl font-black gold-text mt-6 mb-2" id="winTitle">恭喜中獎！</h2>
         <p id="winPrizeName" class="text-3xl text-white font-bold mb-4"></p>
         
-        <!-- AI 財神靈籤區 -->
         <div class="bg-red-900/60 border border-yellow-600/40 p-4 rounded-xl max-w-sm mb-6">
             <h4 class="text-yellow-500 font-bold mb-2">✨ 財神爺靈籤批算 ✨</h4>
             <div id="aiFortune" class="text-lg text-yellow-100 italic leading-relaxed">
@@ -186,19 +179,17 @@
 
     <div class="admin-trigger" onclick="adminCounter()"></div>
 
-    <!-- 管理後台 -->
     <div id="adminModal" class="modal shadow-2xl">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-2xl font-bold gold-text">獎項與比例管理</h3>
             <button onclick="closeAdmin()" class="text-gray-400 text-3xl">&times;</button>
         </div>
         
-        <!-- AI 功能面板 -->
         <div class="bg-blue-900/30 p-3 rounded mb-4 border border-blue-500/30">
             <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-2">
                     <span class="text-blue-300 font-bold">✨ AI 獎項建議</span>
-                    <span id="apiStatus" class="text-[10px] bg-gray-600 px-1 rounded text-white">檢查中...</span>
+                    <span id="apiStatus" class="text-[10px] bg-gray-600 px-1 rounded text-white">Gemini 1.5 Flash</span>
                 </div>
                 <button onclick="getAiSuggestions()" class="bg-blue-600 hover:bg-blue-500 text-xs py-1 px-3 rounded text-white">生成靈感</button>
             </div>
@@ -213,17 +204,19 @@
         </div>
     </div>
 
-    <!-- 音效資源 -->
+    <!-- 音效資源 - 採用絕對路徑與預加載 -->
     <audio id="spinSfx" src="https://assets.mixkit.co/active_storage/sfx/2005/2005-preview.mp3" preload="auto"></audio>
     <audio id="winSfx" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
     <audio id="sadSfx" src="https://assets.mixkit.co/active_storage/sfx/255/255-preview.mp3" preload="auto"></audio>
 
     <script>
         // --- Gemini API 整合 ---
-        const apiKey = "AIzaSyAK-ZGGxlPvM83SwdDEtaBK_3C7yS-WKvw"; // 預覽環境會自動注入
+        // 注意：為了提高相容性，使用 gemini-1.5-flash 模型
+        const apiKey = "AIzaSyAK-ZGGxlPvM83SwdDEtaBK_3C7yS-WKvw"; 
         
         async function callGemini(prompt, systemPrompt = "") {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            // 使用穩定版 gemini-1.5-flash
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] }
@@ -243,11 +236,10 @@
                 return data.candidates?.[0]?.content?.parts?.[0]?.text;
             } catch (e) {
                 console.error("Gemini Error:", e);
-                return `【財神悄悄話】：目前天機不可洩漏（${e.message}）。但大吉大利是一定的！`;
+                return `【財神悄悄話】：天機運作中（${e.message}）。祝您吉星高照！`;
             }
         }
 
-        // --- 核心資料 ---
         let prizes = [
             { name: "iPhone 16 Pro", count: 1, color: "#D4AF37", weight: 2 },
             { name: "現金 8888", count: 3, color: "#E91E63", weight: 8 },
@@ -283,7 +275,6 @@
                 ctx.fillStyle = prize.color;
                 ctx.fill();
                 ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-                ctx.lineWidth = 1;
                 ctx.stroke();
 
                 ctx.save();
@@ -301,7 +292,6 @@
                 startAngle += sliceAngle;
             });
 
-            // 中心裝飾
             ctx.beginPath(); ctx.arc(centerX, centerY, 55, 0, Math.PI * 2);
             ctx.fillStyle = '#FFD700'; ctx.fill();
             ctx.fillStyle = '#8B0000'; ctx.font = "bold 35px serif"; ctx.textAlign = "center";
@@ -311,10 +301,7 @@
         function initiateSpin() {
             if (isSpinning) return;
             const pool = prizes.map((p, i) => ({ ...p, idx: i })).filter(p => p.count > 0);
-            if (pool.length === 0) {
-                statusMsg.innerText = "⚠️ 獎項已全部抽完！";
-                return;
-            }
+            if (pool.length === 0) return;
 
             const totalWeight = pool.reduce((sum, p) => sum + p.weight, 0);
             let random = Math.random() * totalWeight;
@@ -328,9 +315,11 @@
             spinBtn.disabled = true;
             statusMsg.innerText = "財神眷顧中...";
             
-            // 播放旋轉音效
+            // 播放旋轉音效，並預加載慶祝音效
             spinSfx.currentTime = 0;
             spinSfx.play().catch(() => {});
+            winSfx.load(); 
+            sadSfx.load();
 
             const rounds = 8 + Math.floor(Math.random() * 5);
             const winner = prizes[winIndex];
@@ -349,37 +338,37 @@
             const winner = prizes[index];
             if (winner.count > 0) winner.count--;
 
-            // 更新 UI 與播放音效
             document.getElementById('winPrizeName').innerText = winner.name;
             const overlay = document.getElementById('overlay');
             const resultIcon = document.getElementById('resultIcon');
             const winTitle = document.getElementById('winTitle');
 
+            // 根據結果播放對應音效
             if (winner.name === "銘謝惠顧") {
                 resultIcon.innerText = "🏮";
                 winTitle.innerText = "再接再厲";
                 winTitle.className = "text-5xl font-black text-gray-400 mt-6 mb-2";
-                sadSfx.play().catch(() => {});
+                sadSfx.currentTime = 0;
+                sadSfx.play().catch(e => console.log("Sound play error:", e));
             } else {
                 resultIcon.innerText = "🎊";
                 winTitle.innerText = "恭喜中獎！";
                 winTitle.className = "text-5xl font-black gold-text mt-6 mb-2";
-                winSfx.play().catch(() => {});
+                winSfx.currentTime = 0;
+                winSfx.play().catch(e => console.log("Sound play error:", e));
             }
 
             overlay.style.display = 'flex';
             drawWheel();
 
-            // AI 靈籤
             const aiFortune = document.getElementById('aiFortune');
             aiFortune.innerHTML = '正在掐指一算...<div class="flex justify-center gap-1 mt-2"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
             
-            const prompt = `使用者抽中了「${winner.name}」。請扮演一位幽默豪邁的財神爺，根據這個結果批算今日財運。50字以內。`;
+            const prompt = `使用者抽中了「${winner.name}」。請扮演一位幽默豪邁的財神爺，批算今日財運。50字以內。`;
             const fortune = await callGemini(prompt, "你是專業的財神爺 AI。");
             aiFortune.innerText = fortune;
         }
 
-        // AI 智慧建議
         async function getAiSuggestions() {
             const output = document.getElementById('aiSuggestionOutput');
             output.innerText = "正在構思創意獎項...";
@@ -390,7 +379,6 @@
 
         function closeOverlay() { document.getElementById('overlay').style.display = 'none'; }
 
-        // 管理面板
         let adminClicks = 0;
         let adminTimer;
         function adminCounter() {
@@ -401,19 +389,16 @@
         }
 
         function openAdmin() {
-            // 檢查 API 狀態
-            document.getElementById('apiStatus').innerText = apiKey === "" ? "環境自動授權" : "已手動授權";
-            
             const listContainer = document.getElementById('adminList');
             listContainer.innerHTML = prizes.map((p, i) => `
                 <div class="bg-gray-800 p-3 rounded border-l-4" style="border-color: ${p.color}">
                     <div class="mb-2">
                         <label class="block text-xs text-gray-400">獎項名稱</label>
-                        <input type="text" data-idx="${i}" data-key="name" value="${p.name}" class="w-full text-yellow-500 font-bold">
+                        <input type="text" data-idx="${i}" data-key="name" value="${p.name}" class="w-full text-yellow-500 font-bold bg-[#333] border-[#444] border p-1 rounded">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-xs text-gray-400">庫存數量</label><input type="number" data-idx="${i}" data-key="count" value="${p.count}" class="w-full"></div>
-                        <div><label class="block text-xs text-gray-400">中獎權重</label><input type="number" data-idx="${i}" data-key="weight" value="${p.weight}" class="w-full"></div>
+                        <div><label class="block text-xs text-gray-400">庫存數量</label><input type="number" data-idx="${i}" data-key="count" value="${p.count}" class="w-full bg-[#333] border-[#444] border p-1 rounded"></div>
+                        <div><label class="block text-xs text-gray-400">中獎權重</label><input type="number" data-idx="${i}" data-key="weight" value="${p.weight}" class="w-full bg-[#333] border-[#444] border p-1 rounded"></div>
                     </div>
                 </div>
             `).join('');
